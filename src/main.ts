@@ -1,5 +1,9 @@
 import GameLoop from './GameLoop.js';
-import KeyListener from './KeyListener.js';
+import Player from './Player.js';
+import Trophy from './Trophy.js';
+import Score from './Score.js';
+import Lightning from './Lightning.js';
+import Heart from './Heart.js';
 
 console.log('Javascript is working!');
 
@@ -10,31 +14,17 @@ export default class Game {
   // The canvas
   private canvas: HTMLCanvasElement;
 
-  private leftLane: number;
-
-  private middleLane: number;
-
-  private rightLane: number;
-
-  // KeyListener so the user can give input
-  private keyListener: KeyListener;
-
   private gameloop: GameLoop;
 
-  // The player on the canvas
-  private playerImage: HTMLImageElement;
+  private trophy: Trophy;
 
-  private playerPositionX: number;
+  private player: Player;
 
-  // The objects on the canvas
-  // TODO make multiple objects instead of one
-  private trophyImage: HTMLImageElement;
+  private score: Score;
 
-  private trophyPositionX: number;
+  private lightning: Lightning;
 
-  private trophyPositionY: number;
-
-  private trophySpeed: number;
+  private heart: Heart;
 
   /**
    * Construct a new Game
@@ -45,25 +35,12 @@ export default class Game {
     this.canvas = <HTMLCanvasElement>canvas;
 
     // Resize the canvas so it looks more like a Runner game
-    this.canvas.width = window.innerWidth / 3;
+    this.canvas.width = window.innerWidth / 2;
     this.canvas.height = window.innerHeight;
 
-    // x positions of the lanes in the canvas
-    this.leftLane = this.canvas.width / 4;
-    this.middleLane = this.canvas.width / 2;
-    this.rightLane = (this.canvas.width / 4) * 3;
-
-    this.keyListener = new KeyListener();
-
-    // TODO create multiple objects over time
-    this.trophyImage = Game.loadNewImage('assets/img/objects/gold_trophy.png');
-    this.trophyPositionX = this.canvas.width / 2;
-    this.trophyPositionY = 60;
-    this.trophySpeed = 1;
-
-    // Set the player at the center
-    this.playerImage = Game.loadNewImage('./assets/img/players/character_robot_walk0.png');
-    this.playerPositionX = this.canvas.width / 2;
+    this.createRrandomObject();
+    this.player = new Player(this.canvas);
+    this.score = new Score();
 
     // Start the animation
     console.log('start animation');
@@ -75,19 +52,7 @@ export default class Game {
    * Handles any user input that has happened since the last call
    */
   public processInput(): void {
-    // Move player
-    if (this.keyListener.isKeyDown(KeyListener.KEY_LEFT)
-        && this.playerPositionX !== this.leftLane) {
-      this.playerPositionX = this.leftLane;
-    }
-    if (this.keyListener.isKeyDown(KeyListener.KEY_UP)
-        && this.playerPositionX !== this.middleLane) {
-      this.playerPositionX = this.middleLane;
-    }
-    if (this.keyListener.isKeyDown(KeyListener.KEY_RIGHT)
-        && this.playerPositionX !== this.rightLane) {
-      this.playerPositionX = this.rightLane;
-    }
+    this.player.move();
   }
 
   /**
@@ -100,52 +65,38 @@ export default class Game {
    */
   public update(elapsed: number): boolean {
     // Move objects
-    // TODO adjust for multiple objects
-    this.trophyPositionY += this.trophySpeed * elapsed;
+    // TODO this is ... sooo much code for so little
+    if (this.trophy !== null) {
+      this.trophy.move(elapsed);
 
-    // Collision detection of objects and player
-    // Use the bounding box detection method: https://computersciencewiki.org/index.php/Bounding_boxes
-    // TODO adjust for multiple objects
-    if (
-      this.playerPositionX < this.trophyPositionX + this.trophyImage.width
-            && this.playerPositionX + this.playerImage.width > this.trophyPositionX
-            && this.canvas.height - 150 < this.trophyPositionY + this.trophyImage.height
-            && this.canvas.height - 150 + this.playerImage.height > this.trophyPositionY
-    ) {
-      // Create a new trophy in a random lane
-      const random = Game.randomInteger(1, 3);
-      if (random === 1) {
-        this.trophyPositionX = this.leftLane;
+      if (this.player.isCollidingWithTrophy(this.trophy)) {
+        this.score.setTotalScore(Score.TROPHY_SCORE);
+        this.createRrandomObject();
+      } else if (this.trophy.isCollidingWithCanvas()) {
+        this.createRrandomObject();
       }
-      if (random === 2) {
-        this.trophyPositionX = this.middleLane;
-      }
-      if (random === 3) {
-        this.trophyPositionX = this.rightLane;
-      }
-
-      this.trophyImage = Game.loadNewImage('assets/img/objects/gold_trophy.png');
-      this.trophyPositionY = 60;
-      this.trophySpeed = 1;
     }
 
-    // Collision detection of objects with bottom of the canvas
-    if (this.trophyPositionY + this.trophyImage.height > this.canvas.height) {
-      // Create a new trophy in a random lane
-      const random = Game.randomInteger(1, 3);
-      if (random === 1) {
-        this.trophyPositionX = this.leftLane;
-      }
-      if (random === 2) {
-        this.trophyPositionX = this.middleLane;
-      }
-      if (random === 3) {
-        this.trophyPositionX = this.rightLane;
-      }
+    if (this.lightning !== null) {
+      this.lightning.move(elapsed);
 
-      this.trophyImage = Game.loadNewImage('assets/img/objects/gold_trophy.png');
-      this.trophyPositionY = 60;
-      this.trophySpeed = 1;
+      if (this.player.isCollidingWithLighning(this.lightning)) {
+        this.score.setTotalScore(Score.LIGHTNING_SCORE);
+        this.createRrandomObject();
+      } else if (this.lightning.isCollidingWithCanvas()) {
+        this.createRrandomObject();
+      }
+    }
+
+    if (this.heart !== null) {
+      this.heart.move(elapsed);
+
+      if (this.player.isCollidingWithHeart(this.heart)) {
+        this.score.setTotalScore(Score.HEART_SCORE);
+        this.createRrandomObject();
+      } else if (this.heart.isCollidingWithCanvas()) {
+        this.createRrandomObject();
+      }
     }
     return false;
   }
@@ -162,21 +113,24 @@ export default class Game {
 
     this.writeTextToCanvas('UP arrow = middle | LEFT arrow = left | RIGHT arrow = right', this.canvas.width / 2, 40, 14);
 
+    this.writeTextToCanvas(`Heart = ${Score.HEART_SCORE} | Trophy = ${Score.TROPHY_SCORE} | Lightning = ${Score.LIGHTNING_SCORE}`, this.canvas.width / 2, 60, 14);
+
+    this.writeTextToCanvas(`Total score: ${this.score.getTotalScore()}`, this.canvas.width / 2, 90, 18, 'black');
+
     // Render the player
     // Center the image in the lane with the x coordinates
-    ctx.drawImage(
-      this.playerImage,
-      this.playerPositionX - this.playerImage.width / 2,
-      this.canvas.height - 150,
-    );
+    this.player.draw(ctx);
 
     // Render the objects
     // Center the image in the lane with the x coordinates
-    ctx.drawImage(
-      this.trophyImage,
-      this.trophyPositionX - this.trophyImage.width / 2,
-      this.trophyPositionY,
-    );
+    // this.trophy.draw(ctx);
+    if (this.trophy !== null) {
+      this.trophy.draw(ctx);
+    } else if (this.lightning !== null) {
+      this.lightning.draw(ctx);
+    } else if (this.heart !== null) {
+      this.heart.draw(ctx);
+    }
   }
 
   /**
@@ -228,11 +182,33 @@ export default class Game {
    * @param source The address or URL of the a media resource that is to be loaded
    * @returns an HTMLImageElement with the source as its src attribute
    */
-  private static loadNewImage(source: string): HTMLImageElement {
+  public static loadNewImage(source: string): HTMLImageElement {
     const img = new Image();
     img.src = source;
     return img;
   }
+
+  private createRrandomObject = () => {
+    this.trophy = null;
+    this.lightning = null;
+    this.heart = null;
+
+    const randomInt = Game.randomInteger(1, 3);
+    switch (randomInt) {
+      case 1:
+        this.trophy = new Trophy(this.canvas);
+        break;
+      case 2:
+        this.lightning = new Lightning(this.canvas);
+        break;
+      case 3:
+        this.heart = new Heart(this.canvas);
+        break;
+      default:
+        console.log('this object does not exists');
+        break;
+    }
+  };
 }
 
 // Add EventListener to load the game whenever the browser is ready

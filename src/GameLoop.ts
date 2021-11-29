@@ -141,6 +141,7 @@ export default class GameLoop {
 
     // Let the game update itself
     let shouldStop = false;
+
     if (this.mode === GameLoop.PLAY_CATCH_UP) {
       const step = 1;
       while (this.previousElapsed < timestamp && !shouldStop) {

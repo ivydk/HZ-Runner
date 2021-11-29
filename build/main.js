@@ -1,85 +1,62 @@
 import GameLoop from './GameLoop.js';
-import KeyListener from './KeyListener.js';
+import Player from './Player.js';
+import Trophy from './Trophy.js';
+import Score from './Score.js';
+import Lightning from './Lightning.js';
+import Heart from './Heart.js';
 console.log('Javascript is working!');
 export default class Game {
     canvas;
-    leftLane;
-    middleLane;
-    rightLane;
-    keyListener;
     gameloop;
-    playerImage;
-    playerPositionX;
-    trophyImage;
-    trophyPositionX;
-    trophyPositionY;
-    trophySpeed;
+    trophy;
+    player;
+    score;
+    lightning;
+    heart;
     constructor(canvas) {
         this.canvas = canvas;
-        this.canvas.width = window.innerWidth / 3;
+        this.canvas.width = window.innerWidth / 2;
         this.canvas.height = window.innerHeight;
-        this.leftLane = this.canvas.width / 4;
-        this.middleLane = this.canvas.width / 2;
-        this.rightLane = (this.canvas.width / 4) * 3;
-        this.keyListener = new KeyListener();
-        this.trophyImage = Game.loadNewImage('assets/img/objects/gold_trophy.png');
-        this.trophyPositionX = this.canvas.width / 2;
-        this.trophyPositionY = 60;
-        this.trophySpeed = 1;
-        this.playerImage = Game.loadNewImage('./assets/img/players/character_robot_walk0.png');
-        this.playerPositionX = this.canvas.width / 2;
+        this.createRrandomObject();
+        this.player = new Player(this.canvas);
+        this.score = new Score();
         console.log('start animation');
         this.gameloop = new GameLoop(this);
         this.gameloop.start();
     }
     processInput() {
-        if (this.keyListener.isKeyDown(KeyListener.KEY_LEFT)
-            && this.playerPositionX !== this.leftLane) {
-            this.playerPositionX = this.leftLane;
-        }
-        if (this.keyListener.isKeyDown(KeyListener.KEY_UP)
-            && this.playerPositionX !== this.middleLane) {
-            this.playerPositionX = this.middleLane;
-        }
-        if (this.keyListener.isKeyDown(KeyListener.KEY_RIGHT)
-            && this.playerPositionX !== this.rightLane) {
-            this.playerPositionX = this.rightLane;
-        }
+        this.player.move();
     }
     update(elapsed) {
-        this.trophyPositionY += this.trophySpeed * elapsed;
-        if (this.playerPositionX < this.trophyPositionX + this.trophyImage.width
-            && this.playerPositionX + this.playerImage.width > this.trophyPositionX
-            && this.canvas.height - 150 < this.trophyPositionY + this.trophyImage.height
-            && this.canvas.height - 150 + this.playerImage.height > this.trophyPositionY) {
-            const random = Game.randomInteger(1, 3);
-            if (random === 1) {
-                this.trophyPositionX = this.leftLane;
+        if (this.trophy !== null) {
+            this.trophy.move(elapsed);
+            if (this.player.isCollidingWithTrophy(this.trophy)) {
+                this.score.setTotalScore(Score.TROPHY_SCORE);
+                this.createRrandomObject();
             }
-            if (random === 2) {
-                this.trophyPositionX = this.middleLane;
+            else if (this.trophy.isCollidingWithCanvas()) {
+                this.createRrandomObject();
             }
-            if (random === 3) {
-                this.trophyPositionX = this.rightLane;
-            }
-            this.trophyImage = Game.loadNewImage('assets/img/objects/gold_trophy.png');
-            this.trophyPositionY = 60;
-            this.trophySpeed = 1;
         }
-        if (this.trophyPositionY + this.trophyImage.height > this.canvas.height) {
-            const random = Game.randomInteger(1, 3);
-            if (random === 1) {
-                this.trophyPositionX = this.leftLane;
+        if (this.lightning !== null) {
+            this.lightning.move(elapsed);
+            if (this.player.isCollidingWithLighning(this.lightning)) {
+                this.score.setTotalScore(Score.LIGHTNING_SCORE);
+                this.createRrandomObject();
             }
-            if (random === 2) {
-                this.trophyPositionX = this.middleLane;
+            else if (this.lightning.isCollidingWithCanvas()) {
+                this.createRrandomObject();
             }
-            if (random === 3) {
-                this.trophyPositionX = this.rightLane;
+        }
+        if (this.heart !== null) {
+            this.heart.move(elapsed);
+            if (this.player.isCollidingWithHeart(this.heart)) {
+                this.score.setTotalScore(Score.HEART_SCORE);
+                this.createRrandomObject();
             }
-            this.trophyImage = Game.loadNewImage('assets/img/objects/gold_trophy.png');
-            this.trophyPositionY = 60;
-            this.trophySpeed = 1;
+            else if (this.heart.isCollidingWithCanvas()) {
+                this.createRrandomObject();
+            }
         }
         return false;
     }
@@ -87,8 +64,18 @@ export default class Game {
         const ctx = this.canvas.getContext('2d');
         ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.writeTextToCanvas('UP arrow = middle | LEFT arrow = left | RIGHT arrow = right', this.canvas.width / 2, 40, 14);
-        ctx.drawImage(this.playerImage, this.playerPositionX - this.playerImage.width / 2, this.canvas.height - 150);
-        ctx.drawImage(this.trophyImage, this.trophyPositionX - this.trophyImage.width / 2, this.trophyPositionY);
+        this.writeTextToCanvas(`Heart = ${Score.HEART_SCORE} | Trophy = ${Score.TROPHY_SCORE} | Lightning = ${Score.LIGHTNING_SCORE}`, this.canvas.width / 2, 60, 14);
+        this.writeTextToCanvas(`Total score: ${this.score.getTotalScore()}`, this.canvas.width / 2, 90, 18, 'black');
+        this.player.draw(ctx);
+        if (this.trophy !== null) {
+            this.trophy.draw(ctx);
+        }
+        else if (this.lightning !== null) {
+            this.lightning.draw(ctx);
+        }
+        else if (this.heart !== null) {
+            this.heart.draw(ctx);
+        }
     }
     writeTextToCanvas(text, xCoordinate, yCoordinate, fontSize = 20, color = 'red', alignment = 'center') {
         const ctx = this.canvas.getContext('2d');
@@ -105,6 +92,26 @@ export default class Game {
         img.src = source;
         return img;
     }
+    createRrandomObject = () => {
+        this.trophy = null;
+        this.lightning = null;
+        this.heart = null;
+        const randomInt = Game.randomInteger(1, 3);
+        switch (randomInt) {
+            case 1:
+                this.trophy = new Trophy(this.canvas);
+                break;
+            case 2:
+                this.lightning = new Lightning(this.canvas);
+                break;
+            case 3:
+                this.heart = new Heart(this.canvas);
+                break;
+            default:
+                console.log('this object does not exists');
+                break;
+        }
+    };
 }
 window.addEventListener('load', () => new Game(document.getElementById('canvas')));
 //# sourceMappingURL=main.js.map
