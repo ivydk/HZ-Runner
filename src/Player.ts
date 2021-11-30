@@ -75,9 +75,9 @@ export default class Player {
    */
   public collidesWithGoldTrophy(goldTrophy: GoldTrophy): boolean {
     if (this.positionX < goldTrophy.getPositionX() + goldTrophy.getImageWidth()
-            && this.positionX + this.image.width > goldTrophy.getPositionX()
-            && this.canvas.height - 150 < goldTrophy.getPositionY() + goldTrophy.getImageHeight()
-            && this.canvas.height - 150 + this.image.height > goldTrophy.getPositionY()
+      && this.positionX + this.image.width > goldTrophy.getPositionX()
+      && this.canvas.height - 150 < goldTrophy.getPositionY() + goldTrophy.getImageHeight()
+      && this.canvas.height - 150 + this.image.height > goldTrophy.getPositionY()
     ) {
       return true;
     }
@@ -94,10 +94,10 @@ export default class Player {
    */
   public collidesWithSilverTrophy(silverTrophy: SilverTrophy): boolean {
     if (this.positionX < silverTrophy.getPositionX() + silverTrophy.getImageWidth()
-            && this.positionX + this.image.width > silverTrophy.getPositionX()
-            && this.canvas.height - 150 < silverTrophy.getPositionY()
-            + silverTrophy.getImageHeight()
-            && this.canvas.height - 150 + this.image.height > silverTrophy.getPositionY()
+      && this.positionX + this.image.width > silverTrophy.getPositionX()
+      && this.canvas.height - 150 < silverTrophy.getPositionY()
+      + silverTrophy.getImageHeight()
+      && this.canvas.height - 150 + this.image.height > silverTrophy.getPositionY()
     ) {
       return true;
     }
@@ -114,9 +114,9 @@ export default class Player {
    */
   public collidesWithRedCross(redCross: RedCross): boolean {
     if (this.positionX < redCross.getPositionX() + redCross.getImageWidth()
-            && this.positionX + this.image.width > redCross.getPositionX()
-            && this.canvas.height - 150 < redCross.getPositionY() + redCross.getImageHeight()
-            && this.canvas.height - 150 + this.image.height > redCross.getPositionY()
+      && this.positionX + this.image.width > redCross.getPositionX()
+      && this.canvas.height - 150 < redCross.getPositionY() + redCross.getImageHeight()
+      && this.canvas.height - 150 + this.image.height > redCross.getPositionY()
     ) {
       return true;
     }
@@ -133,10 +133,10 @@ export default class Player {
    */
   public collidesWithLightningBolt(lightningBolt: LightningBolt): boolean {
     if (this.positionX < lightningBolt.getPositionX() + lightningBolt.getImageWidth()
-            && this.positionX + this.image.width > lightningBolt.getPositionX()
-            && this.canvas.height - 150 < lightningBolt.getPositionY()
-            + lightningBolt.getImageHeight()
-            && this.canvas.height - 150 + this.image.height > lightningBolt.getPositionY()
+      && this.positionX + this.image.width > lightningBolt.getPositionX()
+      && this.canvas.height - 150 < lightningBolt.getPositionY()
+      + lightningBolt.getImageHeight()
+      && this.canvas.height - 150 + this.image.height > lightningBolt.getPositionY()
     ) {
       return true;
     }

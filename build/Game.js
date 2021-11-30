@@ -8,6 +8,7 @@ export default class Game {
     canvas;
     gameloop;
     player;
+    scoringObject;
     goldTrophy;
     silverTrophy;
     redCross;
