@@ -13,7 +13,7 @@ export default class Player {
         this.middleLane = this.canvas.width / 2;
         this.rightLane = (this.canvas.width / 4) * 3;
         this.keyListener = new KeyListener();
-        this.playerImage = Player.loadNewImage('./assets/img/players/character_robot_walk0.png');
+        this.playerImage = Player.loadNewImage('./assets/img/players/character_malePerson_walk0.png');
         this.playerPositionX = this.canvas.width / 2;
     }
     move = () => {

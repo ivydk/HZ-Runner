@@ -35,7 +35,7 @@ export default class Player {
     this.keyListener = new KeyListener();
 
     // Set the player at the center
-    this.playerImage = Player.loadNewImage('./assets/img/players/character_robot_walk0.png');
+    this.playerImage = Player.loadNewImage('./assets/img/players/character_malePerson_walk0.png');
     this.playerPositionX = this.canvas.width / 2;
   }
 
