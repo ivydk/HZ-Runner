@@ -10,11 +10,13 @@ export default class Game {
     gameloop;
     player;
     scoringObject;
+    arrayOfScorringObjects;
     totalScore;
     constructor(canvas) {
         this.canvas = canvas;
         this.canvas.width = window.innerWidth / 3;
         this.canvas.height = window.innerHeight;
+        this.arrayOfScorringObjects = [];
         this.createRandomScoringObject();
         this.player = new Player(this.canvas);
         this.totalScore = 0;
@@ -26,16 +28,19 @@ export default class Game {
         this.player.move();
     }
     update(elapsed) {
-        if (this.scoringObject !== null) {
-            this.scoringObject.move(elapsed);
-            if (this.player.collidesWith(this.scoringObject)) {
-                this.totalScore += this.scoringObject.getPoints();
-                this.createRandomScoringObject();
-            }
-            else if (this.scoringObject.collidesWithCanvasBottom()) {
-                this.createRandomScoringObject();
-            }
+        if (this.gameloop.frameCount % 45 === 0) {
+            this.createRandomScoringObject();
         }
+        this.arrayOfScorringObjects.forEach((scoringObject) => {
+            scoringObject.move(elapsed);
+            if (this.player.collidesWith(scoringObject)) {
+                this.totalScore += scoringObject.getPoints();
+                this.removeItemFromScoringObjects(scoringObject);
+            }
+            else if (scoringObject.collidesWithCanvasBottom()) {
+                this.removeItemFromScoringObjects(scoringObject);
+            }
+        });
         return false;
     }
     render() {
@@ -44,9 +49,13 @@ export default class Game {
         this.writeTextToCanvas('UP arrow = middle | LEFT arrow = left | RIGHT arrow = right', this.canvas.width / 2, 40, 14);
         this.drawScore();
         this.player.draw(ctx);
-        if (this.scoringObject !== null) {
-            this.scoringObject.draw(ctx);
-        }
+        this.arrayOfScorringObjects.forEach((scoringObject) => {
+            scoringObject.draw(ctx);
+        });
+    }
+    removeItemFromScoringObjects(object) {
+        const index = this.arrayOfScorringObjects.indexOf(object);
+        this.arrayOfScorringObjects.splice(index, 1);
     }
     drawScore() {
         this.writeTextToCanvas(`Score: ${this.totalScore}`, this.canvas.width / 2, 80, 16);
@@ -69,6 +78,7 @@ export default class Game {
         if (random === 5) {
             this.scoringObject = new Heart(this.canvas);
         }
+        this.arrayOfScorringObjects.push(this.scoringObject);
     }
     writeTextToCanvas(text, xCoordinate, yCoordinate, fontSize = 20, color = 'red', alignment = 'center') {
         const ctx = this.canvas.getContext('2d');

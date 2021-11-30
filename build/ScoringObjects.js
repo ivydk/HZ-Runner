@@ -8,6 +8,12 @@ export default class ScorigObjects {
     positionY;
     speed;
     points;
+    static HEART_SCORE = 15;
+    static GOLD_TROPHY_SCORE = 10;
+    static SILVER_TROPHY_SCORE = 5;
+    static LIGHTNING_SCORE = -15;
+    static RED_CROSS_SCORE = -10;
+    static SPEED = 1;
     constructor(canvas) {
         this.canvas = canvas;
         this.leftLane = this.canvas.width / 4;
@@ -24,7 +30,6 @@ export default class ScorigObjects {
             this.positionX = this.rightLane;
         }
         this.positionY = 60;
-        this.speed = 1;
     }
     move(elapsed) {
         this.positionY += this.speed * elapsed;

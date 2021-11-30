@@ -1,6 +1,6 @@
-import ScorigObjects from './ScoringObjects.js';
+import ScoringObjects from './ScoringObjects.js';
 
-export default class LightningBolt extends ScorigObjects {
+export default class LightningBolt extends ScoringObjects {
   /**
    * Construct a new instance of this class
    *
@@ -9,8 +9,8 @@ export default class LightningBolt extends ScorigObjects {
   public constructor(canvas: HTMLCanvasElement) {
     super(canvas);
 
-    this.image = ScorigObjects.loadNewImage('assets/img/objects/titled_yellow_power_icon.png');
-
-    this.points = -10;
+    this.image = ScoringObjects.loadNewImage('assets/img/objects/titled_yellow_power_icon.png');
+    this.points = ScoringObjects.LIGHTNING_SCORE;
+    this.speed = ScoringObjects.SPEED;
   }
 }

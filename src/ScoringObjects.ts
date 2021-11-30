@@ -1,4 +1,4 @@
-export default abstract class ScorigObjects {
+export default abstract class ScoringObjects {
   private canvas: HTMLCanvasElement;
 
   private leftLane: number;
@@ -13,9 +13,22 @@ export default abstract class ScorigObjects {
 
   private positionY: number;
 
-  private speed: number;
+  protected speed: number;
 
   protected points: number;
+
+  // points
+  public static readonly HEART_SCORE = 15;
+
+  public static readonly GOLD_TROPHY_SCORE = 10;
+
+  public static readonly SILVER_TROPHY_SCORE = 5;
+
+  public static readonly LIGHTNING_SCORE = -15;
+
+  public static readonly RED_CROSS_SCORE = -10;
+
+  protected static readonly SPEED = 1;
 
   /**
    * Construct a new instance of this class
@@ -29,7 +42,7 @@ export default abstract class ScorigObjects {
     this.middleLane = this.canvas.width / 2;
     this.rightLane = (this.canvas.width / 4) * 3;
 
-    const random = ScorigObjects.randomInteger(1, 3);
+    const random = ScoringObjects.randomInteger(1, 3);
     if (random === 1) {
       this.positionX = this.leftLane;
     }
@@ -41,7 +54,6 @@ export default abstract class ScorigObjects {
     }
 
     this.positionY = 60;
-    this.speed = 1;
   }
 
   /**
@@ -88,7 +100,7 @@ export default abstract class ScorigObjects {
   }
 
   /**
-   * @returns the Y-posisiotn of this object
+   * @returns the Y-position of this object
    */
   public getPositionY(): number {
     return this.positionY;

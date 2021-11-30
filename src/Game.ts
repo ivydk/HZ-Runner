@@ -1,11 +1,11 @@
-import GameLoop from './GameLoop.js';
-import Player from './Player.js';
-import GoldTrophy from './GoldTrophy.js';
-import LightningBolt from './LightningBolt.js';
-import RedCross from './RedCross.js';
-import SilverTrophy from './SilverTrophy.js';
-import ScorigObjects from './ScoringObjects.js';
-import Heart from './Heart.js';
+import GameLoop from "./GameLoop.js";
+import Player from "./Player.js";
+import GoldTrophy from "./GoldTrophy.js";
+import LightningBolt from "./LightningBolt.js";
+import RedCross from "./RedCross.js";
+import SilverTrophy from "./SilverTrophy.js";
+import ScoringObjects from "./ScoringObjects.js";
+import Heart from "./Heart.js";
 
 /**
  * Main class of this Game.
@@ -14,13 +14,15 @@ export default class Game {
   // The canvas
   private canvas: HTMLCanvasElement;
 
-  private gameloop: GameLoop;
+  private gameLoop: GameLoop;
 
   // The player on the canvas
   private player: Player;
 
   // The objects on the canvas
-  private scoringObject: ScorigObjects;
+  private scoringObject: ScoringObjects;
+
+  private arrayOfScoringObjects: ScoringObjects[];
 
   // Score
   private totalScore: number;
@@ -38,6 +40,7 @@ export default class Game {
     this.canvas.height = window.innerHeight;
 
     // TODO create multiple objects over time
+    this.arrayOfScoringObjects = [];
     this.createRandomScoringObject();
 
     // Set the player at the center
@@ -47,9 +50,9 @@ export default class Game {
     this.totalScore = 0;
 
     // Start the animation
-    console.log('start animation');
-    this.gameloop = new GameLoop(this);
-    this.gameloop.start();
+    console.log("start animation");
+    this.gameLoop = new GameLoop(this);
+    this.gameLoop.start();
   }
 
   /**
@@ -69,18 +72,23 @@ export default class Game {
    * @returns `true` if the game should stop animation
    */
   public update(elapsed: number): boolean {
-    // TODO this is ... sooo much code for so little
-    if (this.scoringObject !== null) {
-      this.scoringObject.move(elapsed);
-
-      if (this.player.collidesWith(this.scoringObject)) {
-        this.totalScore += this.scoringObject.getPoints();
-        this.createRandomScoringObject();
-      } else if (this.scoringObject.collidesWithCanvasBottom()) {
-        this.createRandomScoringObject();
-      }
+    // Spawn a new scoring object every 45 frames
+    if (this.gameLoop.frameCount % 45 === 0) {
+      this.createRandomScoringObject();
     }
-    // move object
+
+    // Move objects
+    // Could also be a regular for loop
+    this.arrayOfScoringObjects.forEach((scoringObject) => {
+      scoringObject.move(elapsed);
+
+      if (this.player.collidesWith(scoringObject)) {
+        this.totalScore += scoringObject.getPoints();
+        this.removeItemFromScoringObjects(scoringObject);
+      } else if (scoringObject.collidesWithCanvasBottom()) {
+        this.removeItemFromScoringObjects(scoringObject);
+      }
+    });
     return false;
   }
 
@@ -90,26 +98,46 @@ export default class Game {
   public render(): void {
     // Render the items on the canvas
     // Get the canvas rendering context
-    const ctx = this.canvas.getContext('2d');
+    const ctx = this.canvas.getContext("2d");
     // Clear the entire canvas
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-    this.writeTextToCanvas('UP arrow = middle | LEFT arrow = left | RIGHT arrow = right', this.canvas.width / 2, 40, 14);
+    this.writeTextToCanvas(
+      "UP arrow = middle | LEFT arrow = left | RIGHT arrow = right",
+      this.canvas.width / 2,
+      40,
+      14
+    );
 
     this.drawScore();
 
     this.player.draw(ctx);
 
-    if (this.scoringObject !== null) {
-      this.scoringObject.draw(ctx);
-    }
+    this.arrayOfScoringObjects.forEach((scoringObject) => {
+      scoringObject.draw(ctx);
+    });
+  }
+
+  /**
+   * removes an object out of the object array
+   *
+   * @param object the object you want to remove from the object array
+   */
+  private removeItemFromScoringObjects(object: ScoringObjects): void {
+    const index = this.arrayOfScoringObjects.indexOf(object);
+    this.arrayOfScoringObjects.splice(index, 1);
   }
 
   /**
    * Draw the score on a canvas
    */
   private drawScore(): void {
-    this.writeTextToCanvas(`Score: ${this.totalScore}`, this.canvas.width / 2, 80, 16);
+    this.writeTextToCanvas(
+      `Score: ${this.totalScore}`,
+      this.canvas.width / 2,
+      80,
+      16
+    );
   }
 
   /**
@@ -135,6 +163,8 @@ export default class Game {
     if (random === 5) {
       this.scoringObject = new Heart(this.canvas);
     }
+
+    this.arrayOfScoringObjects.push(this.scoringObject);
   }
 
   /**
@@ -152,10 +182,10 @@ export default class Game {
     xCoordinate: number,
     yCoordinate: number,
     fontSize: number = 20,
-    color: string = 'red',
-    alignment: CanvasTextAlign = 'center',
+    color: string = "red",
+    alignment: CanvasTextAlign = "center"
   ): void {
-    const ctx = this.canvas.getContext('2d');
+    const ctx = this.canvas.getContext("2d");
     ctx.font = `${fontSize}px sans-serif`;
     ctx.fillStyle = color;
     ctx.textAlign = alignment;

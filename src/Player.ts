@@ -1,5 +1,5 @@
 import KeyListener from './KeyListener.js';
-import ScorigObjects from './ScoringObjects.js';
+import ScoringObjects from './ScoringObjects.js';
 
 export default class Player {
   private canvas: HTMLCanvasElement;
@@ -70,7 +70,7 @@ export default class Player {
    * @param scoringObject the specified ScoringObject object
    * @returns `true` if the player collides with the ScoringObject
    */
-  public collidesWith(scoringObject: ScorigObjects): boolean {
+  public collidesWith(scoringObject: ScoringObjects): boolean {
     if (this.positionX < scoringObject.getPositionX() + scoringObject.getImageWidth()
       && this.positionX + this.image.width > scoringObject.getPositionX()
       && this.canvas.height - 150 < scoringObject.getPositionY() + scoringObject.getImageHeight()

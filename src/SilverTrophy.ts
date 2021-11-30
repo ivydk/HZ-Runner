@@ -1,6 +1,6 @@
-import ScorigObjects from './ScoringObjects.js';
+import ScoringObjects from './ScoringObjects.js';
 
-export default class SilverTrophy extends ScorigObjects {
+export default class SilverTrophy extends ScoringObjects {
   /**
    * Construct a new instance of this class
    *
@@ -9,7 +9,8 @@ export default class SilverTrophy extends ScorigObjects {
   public constructor(canvas: HTMLCanvasElement) {
     super(canvas);
 
-    this.image = ScorigObjects.loadNewImage('assets/img/objects/silver_trophy.png');
-    this.points = 5;
+    this.image = ScoringObjects.loadNewImage('assets/img/objects/silver_trophy.png');
+    this.points = ScoringObjects.SILVER_TROPHY_SCORE;
+    this.speed = ScoringObjects.SPEED;
   }
 }

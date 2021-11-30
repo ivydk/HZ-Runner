@@ -1,6 +1,6 @@
-import ScorigObjects from './ScoringObjects.js';
+import ScoringObjects from './ScoringObjects.js';
 
-export default class RedCross extends ScorigObjects {
+export default class RedCross extends ScoringObjects {
   /**
    * Construct a new instance of this class
    *
@@ -9,7 +9,8 @@ export default class RedCross extends ScorigObjects {
   public constructor(canvas: HTMLCanvasElement) {
     super(canvas);
 
-    this.image = ScorigObjects.loadNewImage('assets/img/objects/tilted_cross.png');
-    this.points = -5;
+    this.image = ScoringObjects.loadNewImage('assets/img/objects/tilted_cross.png');
+    this.points = ScoringObjects.RED_CROSS_SCORE;
+    this.speed = ScoringObjects.SPEED;
   }
 }

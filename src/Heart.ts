@@ -1,6 +1,6 @@
-import ScorigObjects from './ScoringObjects.js';
+import ScoringObjects from './ScoringObjects.js';
 
-export default class Heart extends ScorigObjects {
+export default class Heart extends ScoringObjects {
   /**
    * Construct a new instance of this class
    *
@@ -9,7 +9,8 @@ export default class Heart extends ScorigObjects {
   public constructor(canvas: HTMLCanvasElement) {
     super(canvas);
 
-    this.image = ScorigObjects.loadNewImage('assets/img/objects/face_on_heart.png');
-    this.points = 15;
+    this.image = ScoringObjects.loadNewImage('assets/img/objects/face_on_heart.png');
+    this.points = ScoringObjects.HEART_SCORE;
+    this.speed = ScoringObjects.SPEED;
   }
 }

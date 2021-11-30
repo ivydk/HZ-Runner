@@ -26,12 +26,12 @@ export default class GameLoop {
   public static readonly PLAY_CATCH_UP = 1;
 
   /**
-   * The current mode of the gameloop
+   * The current mode of the gameLoop
    */
   private mode: number;
 
   /**
-   * The current state of this gameloop
+   * The current state of this gameLoop
    */
   private state: number;
 
@@ -64,12 +64,12 @@ export default class GameLoop {
   public frameCount: number;
 
   /**
-   * An indication of the current crames per second of this gameloop
+   * An indication of the current frames per second of this gameLoop
    */
   public fps: number;
 
   /**
-   * An indication of the load of this gameloop. The load is the ratio between
+   * An indication of the load of this gameLoop. The load is the ratio between
    * the time needed to update the game and the time the computer waits to
    * render the next frame.
    */
@@ -79,7 +79,7 @@ export default class GameLoop {
    * Construct a new instance of this class.
    *
    * @param game the game to animate
-   * @param mode OPTIONAL, the mode of the gameloop. It defaults to
+   * @param mode OPTIONAL, the mode of the gameLoop. It defaults to
    *   GameLoop.NORMAL_MODE, which is fine for simple games
    */
   constructor(game: Game, mode: number = GameLoop.NORMAL_MODE) {
@@ -104,7 +104,7 @@ export default class GameLoop {
   }
 
   /**
-   * Requests to gracefully stop the gameloop.
+   * Requests to gracefully stop the gameLoop.
    */
   public stop(): void {
     this.state = GameLoop.STATE_STOPPING;
@@ -125,14 +125,13 @@ export default class GameLoop {
   /**
    * This MUST be an arrow method in order to keep the `this` variable working
    * correctly. It will be overwritten by another object otherwise caused by
-   * javascript scoping behaviour.
+   * javascript scoping behavior.
    *
    * @param timestamp a `DOMHighResTimeStamp` similar to the one returned by
    *   `performance.now()`, indicating the point in time when `requestAnimationFrame()`
    *   starts to execute callback functions
    */
   private step = (timestamp: number) => {
-    // Handle first animation frame
     if (this.isInState(GameLoop.STATE_STARTING)) {
       this.state = GameLoop.STATE_RUNNING;
     }
