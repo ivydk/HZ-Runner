@@ -4,15 +4,12 @@ import GoldTrophy from './GoldTrophy.js';
 import LightningBolt from './LightningBolt.js';
 import RedCross from './RedCross.js';
 import SilverTrophy from './SilverTrophy.js';
+import Heart from './Heart.js';
 export default class Game {
     canvas;
     gameloop;
     player;
     scoringObject;
-    goldTrophy;
-    silverTrophy;
-    redCross;
-    lightningBolt;
     totalScore;
     constructor(canvas) {
         this.canvas = canvas;
@@ -29,43 +26,13 @@ export default class Game {
         this.player.move();
     }
     update(elapsed) {
-        if (this.goldTrophy !== null) {
-            this.goldTrophy.move(elapsed);
-            if (this.player.collidesWithGoldTrophy(this.goldTrophy)) {
-                this.totalScore += this.goldTrophy.getPoints();
+        if (this.scoringObject !== null) {
+            this.scoringObject.move(elapsed);
+            if (this.player.collidesWith(this.scoringObject)) {
+                this.totalScore += this.scoringObject.getPoints();
                 this.createRandomScoringObject();
             }
-            else if (this.goldTrophy.collidesWithCanvasBottom()) {
-                this.createRandomScoringObject();
-            }
-        }
-        if (this.silverTrophy !== null) {
-            this.silverTrophy.move(elapsed);
-            if (this.player.collidesWithSilverTrophy(this.silverTrophy)) {
-                this.totalScore += this.silverTrophy.getPoints();
-                this.createRandomScoringObject();
-            }
-            else if (this.silverTrophy.collidesWithCanvasBottom()) {
-                this.createRandomScoringObject();
-            }
-        }
-        if (this.redCross !== null) {
-            this.redCross.move(elapsed);
-            if (this.player.collidesWithRedCross(this.redCross)) {
-                this.totalScore += this.redCross.getPoints();
-                this.createRandomScoringObject();
-            }
-            else if (this.redCross.collidesWithCanvasBottom()) {
-                this.createRandomScoringObject();
-            }
-        }
-        if (this.lightningBolt !== null) {
-            this.lightningBolt.move(elapsed);
-            if (this.player.collidesWithLightningBolt(this.lightningBolt)) {
-                this.totalScore += this.lightningBolt.getPoints();
-                this.createRandomScoringObject();
-            }
-            else if (this.lightningBolt.collidesWithCanvasBottom()) {
+            else if (this.scoringObject.collidesWithCanvasBottom()) {
                 this.createRandomScoringObject();
             }
         }
@@ -77,39 +44,30 @@ export default class Game {
         this.writeTextToCanvas('UP arrow = middle | LEFT arrow = left | RIGHT arrow = right', this.canvas.width / 2, 40, 14);
         this.drawScore();
         this.player.draw(ctx);
-        if (this.goldTrophy !== null) {
-            this.goldTrophy.draw(ctx);
-        }
-        else if (this.silverTrophy !== null) {
-            this.silverTrophy.draw(ctx);
-        }
-        else if (this.redCross !== null) {
-            this.redCross.draw(ctx);
-        }
-        else if (this.lightningBolt !== null) {
-            this.lightningBolt.draw(ctx);
+        if (this.scoringObject !== null) {
+            this.scoringObject.draw(ctx);
         }
     }
     drawScore() {
         this.writeTextToCanvas(`Score: ${this.totalScore}`, this.canvas.width / 2, 80, 16);
     }
     createRandomScoringObject() {
-        this.goldTrophy = null;
-        this.silverTrophy = null;
-        this.redCross = null;
-        this.lightningBolt = null;
-        const random = Game.randomInteger(1, 4);
+        this.scoringObject = null;
+        const random = Game.randomInteger(1, 5);
         if (random === 1) {
-            this.goldTrophy = new GoldTrophy(this.canvas);
+            this.scoringObject = new GoldTrophy(this.canvas);
         }
         if (random === 2) {
-            this.silverTrophy = new SilverTrophy(this.canvas);
+            this.scoringObject = new SilverTrophy(this.canvas);
         }
         if (random === 3) {
-            this.redCross = new RedCross(this.canvas);
+            this.scoringObject = new RedCross(this.canvas);
         }
         if (random === 4) {
-            this.lightningBolt = new LightningBolt(this.canvas);
+            this.scoringObject = new LightningBolt(this.canvas);
+        }
+        if (random === 5) {
+            this.scoringObject = new Heart(this.canvas);
         }
     }
     writeTextToCanvas(text, xCoordinate, yCoordinate, fontSize = 20, color = 'red', alignment = 'center') {
