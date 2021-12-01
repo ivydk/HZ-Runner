@@ -1,11 +1,11 @@
-import GameLoop from "./GameLoop.js";
-import Player from "./Player.js";
-import GoldTrophy from "./GoldTrophy.js";
-import LightningBolt from "./LightningBolt.js";
-import RedCross from "./RedCross.js";
-import SilverTrophy from "./SilverTrophy.js";
-import ScoringObjects from "./ScoringObjects.js";
-import Heart from "./Heart.js";
+import GameLoop from './GameLoop.js';
+import Player from './Player.js';
+import GoldTrophy from './GoldTrophy.js';
+import LightningBolt from './LightningBolt.js';
+import RedCross from './RedCross.js';
+import SilverTrophy from './SilverTrophy.js';
+import ScoringObjects from './ScoringObjects.js';
+import Heart from './Heart.js';
 
 /**
  * Main class of this Game.
@@ -50,7 +50,7 @@ export default class Game {
     this.totalScore = 0;
 
     // Start the animation
-    console.log("start animation");
+    console.log('start animation');
     this.gameLoop = new GameLoop(this);
     this.gameLoop.start();
   }
@@ -98,16 +98,11 @@ export default class Game {
   public render(): void {
     // Render the items on the canvas
     // Get the canvas rendering context
-    const ctx = this.canvas.getContext("2d");
+    const ctx = this.canvas.getContext('2d');
     // Clear the entire canvas
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-    this.writeTextToCanvas(
-      "UP arrow = middle | LEFT arrow = left | RIGHT arrow = right",
-      this.canvas.width / 2,
-      40,
-      14
-    );
+    this.writeTextToCanvas('UP arrow = middle | LEFT arrow = left | RIGHT arrow = right', this.canvas.width / 2, 40, 14);
 
     this.drawScore();
 
@@ -132,12 +127,7 @@ export default class Game {
    * Draw the score on a canvas
    */
   private drawScore(): void {
-    this.writeTextToCanvas(
-      `Score: ${this.totalScore}`,
-      this.canvas.width / 2,
-      80,
-      16
-    );
+    this.writeTextToCanvas(`Score: ${this.totalScore}`, this.canvas.width / 2, 80, 16);
   }
 
   /**
@@ -182,10 +172,10 @@ export default class Game {
     xCoordinate: number,
     yCoordinate: number,
     fontSize: number = 20,
-    color: string = "red",
-    alignment: CanvasTextAlign = "center"
+    color: string = 'red',
+    alignment: CanvasTextAlign = 'center',
   ): void {
-    const ctx = this.canvas.getContext("2d");
+    const ctx = this.canvas.getContext('2d');
     ctx.font = `${fontSize}px sans-serif`;
     ctx.fillStyle = color;
     ctx.textAlign = alignment;
