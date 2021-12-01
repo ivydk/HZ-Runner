@@ -13,7 +13,7 @@ You don't have to use the docker-compose file if you're fine with installing Nod
 5. Check if NPM is installed by typing  `npm --version` into the terminal. It should print a line with something like `8.1.0`.
 6. Open a terminal in the project directory.
 6. Install the dependencies by running `npm install`.
-7. Compile the project by running `npm run build`. If you want to run the build script everytime you make changes automatically, you can use `npm run watch`.
+7. Compile the project by running `npm run build`. If you want to run the build script every time you make changes automatically, you can use `npm run watch`.
 8. Open the `tsconfig.json` file in this project.
 9. Search the [TypeScript documentation](https://www.typescriptlang.org/docs/home.html) and try to explain every line in the json file. Don't understand something? That's fine! Just don't copy stuff for the sake of filling up your answers.
 10. Install the [EditorConfig](https://editorconfig.org/#download) plugin in your code editor by either using its marketplace or manually installing it.

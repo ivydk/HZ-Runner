@@ -88,7 +88,7 @@ export default abstract class ScoringObject {
   }
 
   /**
-   * @returns the Y-posisiotn of this object
+   * @returns the Y-position of this object
    */
   public getPositionY(): number {
     return this.positionY;
